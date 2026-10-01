@@ -1,0 +1,98 @@
+---
+title: "01_Viz"
+author: "Sania Sheifuddin"
+date: "2026-10-01"
+output: github_document
+---
+
+```{r}
+library (tidyverse)
+library (ggridges)
+
+library (p8105.datasets)
+data ("weather_df")
+```
+
+```{r}
+weather_df
+```
+Let's make a scatterplot 
+```{r}
+ggplot(weather_df,aes(x=tmin, y = tmax))
+# if we only run that we have not completely written down what we need and what kind of plot am I interested in?
+```
+```{r}
+ggplot(weather_df,aes(x=tmin, y = tmax)) +
+  geom_point()
+```
+
+```{r}
+ggp_temp_scatterplot = 
+weather_df |>
+  ggplot(aes (x=tmin, y= tmax)) +
+  geom_point()
+
+ggp_temp_scatterplot
+```
+
+Let's make this a bit fancier...
+```{r}
+weather_df |>
+  ggplot(aes (x=tmin, y= tmax, color = name)) +
+  geom_point(alpha = .25) +
+  geom_smooth (se=FALSE)
+# gives a smooth curve in the middle for all categories 
+```
+```{r}
+weather_df |>
+  ggplot(aes (x=tmin, y= tmax)) + #if we run this it's gonna run a blank plot cuz we haven't told what data it needs
+  geom_smooth (se=FALSE)
+# you don't have a scatterplot, once you tell you dataset what to do it will create something from datapoints 
+```
+Show faceting
+
+```{r}
+weather_df |>
+  ggplot(aes(x=tmin, y=tmax, color = name))+
+geom_point(alpha = .5)+
+  facet_grid(.~name) # when you want name to separate to columns, variable name will separate the columns 
+```
+```{r}
+weather_df |>
+  ggplot(aes(x=tmin, y=tmax, color = name))+
+geom_point(alpha = .5)+
+   facet_grid(name~.) #This would give a horizontal version of the last one
+```
+
+```{r}
+weather_df |>
+  ggplot(aes(x=tmin, y=tmax, color = name))+
+geom_point(alpha = .5)+
+   facet_grid(cols=vars(name))
+```
+Let's look at something else
+
+```{r}
+weather_df |>
+  ggplot(aes(x= date, y=tmax,color =name)) +
+geom_point(alpha=0.5) + 
+  geom_smooth(se=FALSE)+
+  facet_grid (.~name)
+```
+Make a plot of central park tmax v tmin only, and convert temperatures to farenheit.
+```{r}
+weather_df |>
+  filter (name == "CentralPark_NY") |>
+  mutate (
+    tmax = tmax * (9/5) + 32,
+    tmin = tmin * (9/5) + 32
+  ) |>
+  ggplot(aes(x= tmin, y=tmax)) +
+  geom_point() 
+  
+```
+
+
+
+
+
